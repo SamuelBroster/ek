@@ -15,12 +15,16 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.11"
 pydantic = "^2.5.2"
+boto3 = "^1.34.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.8"
 mypy = "^1.7.1"
 pytest = "^7.4.3"
 pytest-cov = "^4.1.0"
+pyyaml = "5.3.1" # Require <6 for pytest-docker-compose and 5.4.1 - 6.0 is broke PEP 517 builds
+docker = "6.1.3" # https://stackoverflow.com/a/77651191/11908063
+pytest-docker-compose = "^3.2.1"
 
 [tool.mypy]
 exclude = [
