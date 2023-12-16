@@ -43,3 +43,7 @@ class EntityModel(BaseModel):
         if not definition:
             raise InvalidModelError(f"Missing parameter: {definition}")
         return definition
+
+
+def get_model_name(model: type[EntityModel]) -> str:
+    return model.__class__.__name__
