@@ -1,3 +1,2 @@
-
-def test_dynamodb_fixture(session_scoped_container_getter):
+def test_dynamodb_fixture(dynamodb_session):
     assert 1 == 1
