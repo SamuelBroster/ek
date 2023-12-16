@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "ektable"
+version = "0.1.0"
+description = ""
+authors = ["Samuel Broster <sam@broster.dev>"]
+readme = "README.md"
+license = "MIT" 
+homepage = "https://github.com/SamuelBroster/ek"
+repository = "https://github.com/SamuelBroster/ek"
+keywords = ["ek", "onetable", "python", "dynamo", "dynamodb", "aws", "one table", "one-table", "orm"]
+packages = [
+    { include = "ek" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
