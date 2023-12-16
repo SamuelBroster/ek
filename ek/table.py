@@ -10,9 +10,11 @@ class Table:
     def __init__(self) -> None:
         self.collections: dict[str, EntityCollection] = {}
 
-    def register_migration(self, model: type[T], migration: MigrationFunc[T]) -> None:
+    def register_migration(
+        self, old_model: type[EntityModel], model: type[T], migration: MigrationFunc[T]
+    ) -> None:
         collection = self.collections[get_model_name(model)]
-        collection.register_migration(migration)
+        collection.register_migration(old_model, migration)
 
     def register_model(self, model: type[T]) -> EntityCollection[T]:
         model_name = get_model_name(model)

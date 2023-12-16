@@ -13,8 +13,10 @@ class EntityCollection(Generic[T]):
         self.model = model
         self._migrations: dict[str, MigrationFunc[T]] = {}
 
-    def register_migration(self, migration: MigrationFunc[T]) -> None:
-        self._migrations[self.model.__class__.__name__] = migration
+    def register_migration(
+        self, old_model: type[EntityModel], migration: MigrationFunc[T]
+    ) -> None:
+        self._migrations[old_model.__class__.__name__] = migration
         raise NotImplementedError("TODO: implement migrations")
 
     def get(self, **kwargs) -> T:
