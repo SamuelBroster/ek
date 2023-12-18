@@ -5,8 +5,8 @@ install:
 
 .PHONY: static
 static:
-	poetry run ruff format ek
-	poetry run ruff check ek --fix
+	poetry run ruff format .
+	poetry run ruff check . --fix
 	poetry run mypy ek
 
 .PHONY: test

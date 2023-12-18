@@ -3,7 +3,7 @@ import re
 _TEMPLATE_REGEX = re.compile(r"\{([^}]+)\}")
 
 
-class InvalidParamsError(Exception):
+class MissingParameterValueError(Exception):
     pass
 
 
@@ -13,7 +13,7 @@ def populate_template(template: str, **kwargs) -> str:
         parameter for parameter in parameters if parameter not in kwargs
     ]
     if missing_parameters:
-        raise InvalidParamsError(
+        raise MissingParameterValueError(
             f"Missing parameters required in template: {missing_parameters}",
         )
     return template.format(**kwargs)

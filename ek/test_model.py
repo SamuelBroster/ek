@@ -1,7 +1,7 @@
 import pytest
 
 from ek.model import EntityModel
-from ek.template import InvalidParamsError
+from ek.template import MissingParameterValueError
 
 
 def test_entity_model():
@@ -27,7 +27,7 @@ def test_entity_model_with_invalid_template():
         string: str
         template: str = "#{invalid}#"
 
-    with pytest.raises(InvalidParamsError) as excinfo:
+    with pytest.raises(MissingParameterValueError) as excinfo:
         EntityUnderTest(string="string")
     excinfo.match("invalid")
 
@@ -38,6 +38,6 @@ def test_entity_model_with_nested_template():
         template: str = "#{invalid}#"
         nested_template: str = "{template}"
 
-    with pytest.raises(InvalidParamsError) as excinfo:
+    with pytest.raises(MissingParameterValueError) as excinfo:
         EntityUnderTest(string="string")
     excinfo.match("template")

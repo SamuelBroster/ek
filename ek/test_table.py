@@ -14,8 +14,8 @@ def simple_model():
 
 
 @pytest.fixture()
-def table():
-    return Table()
+def table(dynamodb_resource):
+    return Table(dynamodb_resource, "OneTable")
 
 
 def test_register_a_simple_model(table, simple_model):
