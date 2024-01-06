@@ -1,20 +1,18 @@
-import boto3
-
 # TODO: aioboto3 ?
 
-dynamodb = boto3.resource(
-    "dynamodb",
-    endpoint_url="http://localhost:8000",
-    aws_access_key_id="ACCESSID",
-    aws_secret_access_key="ACCESS`KEY",
-)
+# dynamodb = boto3.resource(
+#     "dynamodb",
+#     endpoint_url="http://localhost:8000",
+#     aws_access_key_id="ACCESSID",
+#     aws_secret_access_key="ACCESS`KEY",
+# )
 
 TABLE = "MyTable"
 
 
-def test_dynamodb_fixture(session_scoped_container_getter):
+def test_dynamodb_fixture(dynamodb_resource):
     try:
-        dynamodb.create_table(
+        dynamodb_resource.create_table(
             TableName=TABLE,
             AttributeDefinitions=[
                 {"AttributeName": "pk", "AttributeType": "S"},
@@ -27,7 +25,7 @@ def test_dynamodb_fixture(session_scoped_container_getter):
     except Exception:
         print("Table already exists")
 
-    table = dynamodb.Table(TABLE)
+    table = dynamodb_resource.Table(TABLE)
     response = table.get_item(
         Key={"pk": "someval"},
     )

@@ -1,16 +1,13 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Generic, TypeVar
-
-from ek.model import EntityModel
-
-E = TypeVar("E", bound=EntityModel)
+from typing import Any
 
 
 class ConsumedCapacity(Enum):
     INDEXES = "INDEXES"
     TOTAL = "TOTAL"
     NONE = "NONE"
+
 
 class ReturnValues(Enum):
     NONE = "NONE"
@@ -19,18 +16,31 @@ class ReturnValues(Enum):
     ALL_NEW = "ALL_NEW"
     UPDATED_NEW = "UPDATED_NEW"
 
+
 class ItemCollectionMetrics(Enum):
     NONE = "NONE"
     SIZE = "SIZE"
+
 
 class ReturnValuesOnConditionCheckFailure(Enum):
     NONE = "NONE"
     ALL_OLD = "ALL_OLD"
 
+
 ExpressionAttributeNames = dict[str, str]
 ExpressionAttributeValues = dict[str, Any]
 
+
 @dataclass
-class GetItemResponse(Generic[E]):
-    item: E | None
-    consumed_capacity: dict[str, Any] | None
+class GetItemOptions:
+    consistent_read: bool = False
+    return_consumed_capacity: ConsumedCapacity = ConsumedCapacity.NONE
+
+
+@dataclass
+class PutItemOptions:
+    return_values: ReturnValues = ReturnValues.NONE
+    return_consumed_capacity: ConsumedCapacity = ConsumedCapacity.NONE
+    return_values_on_condition_check_failure: ReturnValuesOnConditionCheckFailure = (
+        ReturnValuesOnConditionCheckFailure.NONE
+    )
