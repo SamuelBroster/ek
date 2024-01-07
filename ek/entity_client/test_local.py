@@ -41,5 +41,5 @@ def test_query(simple_client, simple_model):
     response = simple_client.query(company_id="COMP-123", sk={"begins": "US#-4"})
     assert response.items == [user2, user3]
 
-    response = simple_client.query(company_id="COMP-123", sk={">": "US#-46"})
+    response = simple_client.query(company_id="COMP-123", sk={">>": "US#-46"})
     assert response.items == [user3]

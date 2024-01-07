@@ -14,12 +14,15 @@ from ek.entity_client.base import (
 )
 from ek.entity_client.conditions import (
     DEFAULT_SORT_KEY_CONDITION,
+    SortKeyCondition,
     verify_sort_key_condition,
 )
 from ek.entity_client.options import (
     GET_ITEM_OPTION_DEFAULTS,
     PUT_ITEM_OPTIONS_DEFAULTS,
     QUERY_OPTIONS_DEFAULTS,
+    GetItemOptions,
+    PutItemOptions,
 )
 from ek.entity_client.responses import GetItemResponse, PutItemResponse, QueryResponse
 from ek.keys import PK, SK
@@ -57,7 +60,7 @@ class EntityClientLocal(EntityClientBase[T]):
 
     def get_item(
         self,
-        _options=GET_ITEM_OPTION_DEFAULTS,
+        _options: GetItemOptions = GET_ITEM_OPTION_DEFAULTS,
         **kwargs,
     ) -> GetItemResponse[T]:
         pk, sk = self.primary_key_tuple(**kwargs)
@@ -67,7 +70,7 @@ class EntityClientLocal(EntityClientBase[T]):
     def put_item(
         self,
         item: T,
-        _options=PUT_ITEM_OPTIONS_DEFAULTS,
+        _options: PutItemOptions = PUT_ITEM_OPTIONS_DEFAULTS,
     ):
         pk, sk = self.primary_key_tuple(**item.model_dump_ddb())
         self._data_store[pk][sk] = item
@@ -77,26 +80,30 @@ class EntityClientLocal(EntityClientBase[T]):
 
     def query(
         self,
-        sk=DEFAULT_SORT_KEY_CONDITION,
+        sk: SortKeyCondition = DEFAULT_SORT_KEY_CONDITION,
         _options=QUERY_OPTIONS_DEFAULTS,
         **kwargs,
     ):
         verify_sort_key_condition(sk)
 
-        pk, sk = self.primary_key_tuple(**kwargs)
+        pk, _ = self.primary_key_tuple(**kwargs)
         pk_dict = self._data_store.get(pk, {})
         if not sk:
-            items = list(pk_dict)
+            items = list(pk_dict.values())
         else:
             assert len(sk) == 1
-            condition, value = sk.keys()[0], sk.values()[0]
+            condition, value = next(iter(sk.items()))
             if condition == "begins_with" or condition == "begins":
-                items = [item for sk, item in pk_dict.items() if sk.startswith(value)]
+                items = [
+                    item
+                    for _sk, item in pk_dict.items()
+                    if _sk and str(_sk).startswith(str(value))
+                ]
             elif condition == "between":
                 items = [
                     item
-                    for sk, item in pk_dict.items()
-                    if condition[0] <= sk <= condition[1]
+                    for _sk, item in pk_dict.items()
+                    if condition[0] <= _sk <= condition[1]  # type: ignore [operator]
                 ]
             else:
                 cmp = {
@@ -106,6 +113,6 @@ class EntityClientLocal(EntityClientBase[T]):
                     ">": operator.gt,
                     ">=": operator.ge,
                 }[condition]
-                items = [item for sk, item in pk_dict.items() if cmp(sk, value)]
+                items = [item for _sk, item in pk_dict.items() if cmp(_sk, value)]  # type: ignore [arg-type]
 
         return QueryResponse(items=items)
