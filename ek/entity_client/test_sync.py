@@ -38,3 +38,9 @@ def test_put_and_get_item(simple_model_client, simple_model_instance):
         customer_id=simple_model_instance.customer_id
     )
     assert response.item == simple_model_instance
+
+
+# TODO: Test when there are missing parameters
+# TODO: Test attempting to put the wrong entity
+
+# TODO: Test nesteded fields and dictionaries (here or elsewhere?)

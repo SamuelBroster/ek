@@ -68,13 +68,19 @@ class ConsumedCapacityResponse:
         )
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
 class GetItemResponse(Generic[T]):
     item: T | None
     consumed_capacity: ConsumedCapacityResponse | None = None
 
 
-@dataclass
+@dataclass(frozen=True, slots=True)
 class PutItemResponse(Generic[T]):
     item: T | None
+    consumed_capacity: ConsumedCapacityResponse | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class QueryResponse(Generic[T]):
+    items: list[T]
     consumed_capacity: ConsumedCapacityResponse | None = None

@@ -5,16 +5,21 @@ from typing import Any, Generic, TypeVar
 
 from mypy_boto3_dynamodb.service_resource import Table
 
-from ek.entity_client.options import GetItemOptions, PutItemOptions
+from ek.entity_client.conditions import DEFAULT_SORT_KEY_CONDITION, SortKeyCondition
+from ek.entity_client.options import (
+    GET_ITEM_OPTION_DEFAULTS,
+    PUT_ITEM_OPTIONS_DEFAULTS,
+    QUERY_OPTIONS_DEFAULTS,
+    GetItemOptions,
+    PutItemOptions,
+    QueryOptions,
+)
 from ek.entity_client.responses import GetItemResponse, PutItemResponse
 from ek.model import EntityModel
 
 T = TypeVar("T", bound=EntityModel)
 U = TypeVar("U", bound=EntityModel)
 MigrationFunc = Callable[[U], T]
-
-DEFAULT_GET_ITEM_OPTIONS = GetItemOptions()
-DEFAULT_PUT_ITEM_OPTIONS = PutItemOptions()
 
 
 class MigrationDict(UserDict[type[EntityModel], MigrationFunc[Any, T]]):
@@ -42,7 +47,7 @@ class EntityClientBase(Generic[T], ABC):
 
     @abstractmethod
     def get_item(
-        self, _options=DEFAULT_GET_ITEM_OPTIONS, **kwargs
+        self, _options: GetItemOptions = GET_ITEM_OPTION_DEFAULTS, **kwargs
     ) -> GetItemResponse[T]:
         pass
 
@@ -50,6 +55,15 @@ class EntityClientBase(Generic[T], ABC):
     def put_item(
         self,
         item: T,
-        _options=DEFAULT_PUT_ITEM_OPTIONS,
+        _options: PutItemOptions = PUT_ITEM_OPTIONS_DEFAULTS,
     ) -> PutItemResponse[T]:
+        pass
+
+    @abstractmethod
+    def query(
+        self,
+        sk: SortKeyCondition = DEFAULT_SORT_KEY_CONDITION,
+        _options: QueryOptions = QUERY_OPTIONS_DEFAULTS,
+        **kwargs,
+    ):
         pass

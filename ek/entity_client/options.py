@@ -1,6 +1,5 @@
-from dataclasses import dataclass
 from enum import Enum
-from typing import Any
+from typing import Any, NotRequired, TypedDict
 
 
 class ConsumedCapacity(Enum):
@@ -31,16 +30,33 @@ ExpressionAttributeNames = dict[str, str]
 ExpressionAttributeValues = dict[str, Any]
 
 
-@dataclass
-class GetItemOptions:
-    consistent_read: bool = False
-    return_consumed_capacity: ConsumedCapacity = ConsumedCapacity.NONE
+class GetItemOptions(TypedDict):
+    consistent_read: NotRequired[bool]
+    return_consumed_capacity: NotRequired[ConsumedCapacity]
 
 
-@dataclass
-class PutItemOptions:
-    return_values: ReturnValues = ReturnValues.NONE
-    return_consumed_capacity: ConsumedCapacity = ConsumedCapacity.NONE
-    return_values_on_condition_check_failure: ReturnValuesOnConditionCheckFailure = (
-        ReturnValuesOnConditionCheckFailure.NONE
-    )
+GET_ITEM_OPTION_DEFAULTS: GetItemOptions = dict(
+    consistent_read=False, return_consumed_capacity=ConsumedCapacity.NONE
+)
+
+
+class PutItemOptions(TypedDict):
+    return_values: NotRequired[ReturnValues]
+    return_consumed_capacity: NotRequired[ConsumedCapacity]
+    return_values_on_condition_check_failure: NotRequired[
+        ReturnValuesOnConditionCheckFailure
+    ]
+
+
+PUT_ITEM_OPTIONS_DEFAULTS: PutItemOptions = dict(
+    return_values=ReturnValues.NONE,
+    return_consumed_capacity=ConsumedCapacity.NONE,
+    return_values_on_condition_check_failure=ReturnValuesOnConditionCheckFailure.NONE,
+)
+
+
+class QueryOptions(TypedDict):
+    pass
+
+
+QUERY_OPTIONS_DEFAULTS: QueryOptions = dict()
