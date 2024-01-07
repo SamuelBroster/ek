@@ -1,12 +1,3 @@
-# TODO: aioboto3 ?
-
-# dynamodb = boto3.resource(
-#     "dynamodb",
-#     endpoint_url="http://localhost:8000",
-#     aws_access_key_id="ACCESSID",
-#     aws_secret_access_key="ACCESS`KEY",
-# )
-
 TABLE = "MyTable"
 
 

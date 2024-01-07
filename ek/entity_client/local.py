@@ -11,6 +11,7 @@ from ek.entity_client.base import (
     T,
 )
 from ek.entity_client.responses import GetItemResponse, PutItemResponse
+from ek.keys import PK, SK
 
 PrimaryKey = tuple[str, str | None]
 
@@ -38,7 +39,7 @@ class EntityClientLocal(EntityClientBase[T]):
 
     def primary_key_tuple(self, **kwargs) -> PrimaryKey:
         primary_key = self.primary_key(**kwargs)
-        return (primary_key["pk"], primary_key.get("sk"))
+        return (primary_key[PK], primary_key.get(SK))
 
     def get_item(
         self,

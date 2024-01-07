@@ -1,29 +1,11 @@
-from collections.abc import Mapping, Sequence
 from contextlib import suppress
-from decimal import Decimal
-from typing import Any, cast
+from typing import cast
 
 from pydantic import BaseModel
 
+from ek.aws.type_mapping import DdbMapping
+from ek.keys import PK, SK
 from ek.template import populate_template
-
-DdbMapping = Mapping[
-    str,
-    bytes
-    | bytearray
-    | str
-    | int
-    | Decimal
-    | bool
-    | set[int]
-    | set[Decimal]
-    | set[str]
-    | set[bytes]
-    | set[bytearray]
-    | Sequence[Any]
-    | Mapping[str, Any]
-    | None,
-]
 
 
 class InvalidParameterError(Exception):
@@ -39,9 +21,9 @@ class EntityModel(BaseModel):
 
     @classmethod
     def primary_key(cls, **kwargs) -> dict[str, str]:
-        primary_key = {"pk": cls.fill_template("pk", **kwargs)}
+        primary_key = {PK: cls.fill_template(PK, **kwargs)}
         with suppress(InvalidParameterError):
-            primary_key["sk"] = cls.fill_template("sk", **kwargs)
+            primary_key[SK] = cls.fill_template(SK, **kwargs)
         return primary_key
 
     @classmethod
